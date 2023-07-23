@@ -30,7 +30,7 @@ export const MainLayout = () => {
                 setIsDark={(value) => setIsDarkMode(value)}
               />
             </Row>
-            <Content>
+            <Content className={styles.content}>
               <Outlet />
             </Content>
           </Layout>
