@@ -1,55 +1,41 @@
-import React from "react";
-import { Layout, Space } from "antd";
+import { ConfigProvider, Layout, Row, theme } from "antd";
 import { Outlet } from "react-router-dom";
+import { SiderMenu } from "./components/slider-menu";
+import { HeaderMenu } from "./components/header-menu";
+import { useState } from "react";
+import styles from "./main-layout.module.scss";
 
-const { Header, Footer, Sider, Content } = Layout;
+const { defaultAlgorithm, darkAlgorithm } = theme;
+const { Sider, Content } = Layout;
 
 export const MainLayout = () => {
-  const headerStyle: React.CSSProperties = {
-    textAlign: "center",
-    color: "#fff",
-    height: 64,
-    paddingInline: 50,
-    lineHeight: "64px",
-    backgroundColor: "#7dbcea",
-  };
-
-  const contentStyle: React.CSSProperties = {
-    textAlign: "center",
-    // minHeight: 120,
-    lineHeight: "120px",
-    color: "#fff",
-    backgroundColor: "#108ee9",
-  };
-
-  const siderStyle: React.CSSProperties = {
-    textAlign: "center",
-    lineHeight: "120px",
-    color: "#fff",
-    backgroundColor: "#3ba0e9",
-  };
-
-  const footerStyle: React.CSSProperties = {
-    textAlign: "center",
-    color: "#fff",
-    backgroundColor: "#7dbcea",
-    position: "fixed",
-    bottom: "0",
-    width: "100%",
-  };
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
+  document.body.style.backgroundColor = isDarkMode ? "#121212" : "#e2e2e2";
 
   return (
     <>
-      <Layout>
-        <Sider style={siderStyle}>Sider</Sider>
+      <ConfigProvider
+        theme={{
+          algorithm: isDarkMode ? darkAlgorithm : defaultAlgorithm,
+        }}
+      >
         <Layout>
-          <Header style={headerStyle}>Header</Header>
-          <Content style={contentStyle}>
-            <Outlet />
-          </Content>
-          <Footer style={footerStyle}>Footer</Footer>
+          <Sider theme="light">
+            <SiderMenu />
+          </Sider>
+          <Layout>
+            <Row align={"middle"} className={styles.headerStyle}>
+              <HeaderMenu
+                isDark={isDarkMode}
+                setIsDark={(value) => setIsDarkMode(value)}
+              />
+            </Row>
+            <Content>
+              <Outlet />
+            </Content>
+          </Layout>
         </Layout>
-      </Layout>
+      </ConfigProvider>
     </>
   );
 };
