@@ -29,24 +29,22 @@ export const HomePage = () => {
     },
   ];
   return (
-    <Row>
-      <Space>
-        {fakeList.map((item) => (
-          <Card
-            key={item.id}
-            hoverable
-            style={{ width: 180 }}
-            cover={
-              <img
-                alt="example"
-                src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"
-              />
-            }
-          >
-            <Meta title={item.title} description="www.instagram.com" />
-          </Card>
-        ))}
-      </Space>
+    <Row gutter={[20, 20]} style={{padding: '10px'}}>
+      {fakeList.map((item) => (
+        <Card
+          key={item.id}
+          hoverable
+          style={{ width: 180 }}
+          cover={
+            <img
+              alt="example"
+              src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"
+            />
+          }
+        >
+          <Meta title={item.title} description="www.instagram.com" />
+        </Card>
+      ))}
     </Row>
   );
 };

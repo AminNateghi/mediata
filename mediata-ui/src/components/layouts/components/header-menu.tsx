@@ -19,12 +19,14 @@ export const HeaderMenu = ({ isDark, setIsDark }: Props) => {
   return (
     <>
       <Col flex={"auto"}>
-        <Button shape={"circle"}>
-          <LeftOutlined />
-        </Button>
-        <Button shape={"circle"}>
-          <RightOutlined />
-        </Button>
+        <Space>
+          <Button shape={"circle"} onClick={() => navigate(-1)}>
+            <LeftOutlined />
+          </Button>
+          <Button shape={"circle"} onClick={() => navigate(1)}>
+            <RightOutlined />
+          </Button>
+        </Space>
       </Col>
       <Col>
         <Space>
