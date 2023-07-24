@@ -1,5 +1,4 @@
-import { Card, Col, Row, Space, Typography } from "antd";
-// const { Text, Link } = Typography;
+import { Card, Row, Space } from "antd";
 const { Meta } = Card;
 
 interface Movies {
