@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { Button, Col, Input, List, Row, Space, Spin, Typography } from "antd";
-import { storage } from "@neutralinojs/lib";
 import { DeleteOutlined, FolderOutlined } from "@ant-design/icons";
 import {
   useSettingsAddFolder,
+  useSettingsDeleteFolder,
   useSettingsGetFolders,
 } from "@/services/settings-service";
 
@@ -13,11 +13,18 @@ export const SettingsPages = () => {
   const [folder, setFolder] = useState<any>();
   const { data: viewSettings, isFetching } = useSettingsGetFolders();
   const { mutate: serviceAddFolder } = useSettingsAddFolder();
+  const { mutate: serviceDeleteFolder } = useSettingsDeleteFolder();
 
   const handleAddFolder = () => {
     if (folder) {
       serviceAddFolder(folder);
       setFolder("");
+    }
+  };
+
+  const handleDeleteFolder = (folder: string) => {
+    if (folder) {
+      serviceDeleteFolder(folder);
     }
   };
 
@@ -32,10 +39,10 @@ export const SettingsPages = () => {
               placeholder="Enter folder"
               value={folder}
               onChange={(value) => setFolder(value.target.value)}
+              onPressEnter={() => handleAddFolder()}
             />
             <Button onClick={() => handleAddFolder()}>Add to list</Button>
           </Space.Compact>
-          <Button onClick={() => storage.setData("folders", "")}>Clear</Button>
           <List bordered header={<Text strong>Selected folders:</Text>}>
             {isFetching ? (
               <Spin />
@@ -45,7 +52,10 @@ export const SettingsPages = () => {
                 <List.Item
                   key={item}
                   actions={[
-                    <Button shape={"circle"}>
+                    <Button
+                      shape={"circle"}
+                      onClick={() => handleDeleteFolder(item)}
+                    >
                       <DeleteOutlined />
                     </Button>,
                   ]}

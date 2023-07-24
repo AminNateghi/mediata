@@ -4,7 +4,7 @@ import { PageNotFound } from "./components/pages/other-pages/page-not-found";
 import { HomePage } from "./components/pages/home-pages/home-pages";
 import { SettingsPages } from "./components/pages/settings-pages/settings-page";
 import { QueryClientProvider } from "react-query";
-import { queryClient } from "./services/queryClient";
+import { queryClient } from "./services/query-client";
 
 function App() {
   return (
