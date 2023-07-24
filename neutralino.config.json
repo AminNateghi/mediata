@@ -10,7 +10,8 @@
     "app.*",
     "os.*",
     "debug.log",
-    "filesystem.readDirectory"
+    "filesystem.*",
+    "storage.*"
   ],
   "modes": {
     "window": {
