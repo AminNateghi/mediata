@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Button, Col, Input, List, Row, Space, Spin, Typography } from "antd";
 import { DeleteOutlined, FolderOutlined } from "@ant-design/icons";
 import {
@@ -6,11 +6,13 @@ import {
   useSettingsDeleteFolder,
   useSettingsGetFolders,
 } from "@/services/settings-service";
+import { FetchMoviesContext } from "@/components/layouts/components/fetch-movies";
 
 const { Text, Title } = Typography;
 
 export const SettingsPages = () => {
   const [folder, setFolder] = useState<any>();
+  const { setIsFetched } = useContext(FetchMoviesContext);
   const { data: viewSettings, isFetching } = useSettingsGetFolders();
   const { mutate: serviceAddFolder } = useSettingsAddFolder();
   const { mutate: serviceDeleteFolder } = useSettingsDeleteFolder();
@@ -18,6 +20,7 @@ export const SettingsPages = () => {
   const handleAddFolder = () => {
     if (folder) {
       serviceAddFolder(folder);
+      setIsFetched(true);
       setFolder("");
     }
   };

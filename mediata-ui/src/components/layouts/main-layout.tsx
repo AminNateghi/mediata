@@ -1,16 +1,20 @@
-import { ConfigProvider, Layout, Row, theme } from "antd";
+import { useMemo, useState } from "react";
 import { Outlet } from "react-router-dom";
+import { ConfigProvider, Layout, Row, theme } from "antd";
 import { SiderMenu } from "./components/slider-menu";
 import { HeaderMenu } from "./components/header-menu";
-import { useState } from "react";
+import { FetchMovies, FetchMoviesContext } from "./components/fetch-movies";
 import styles from "./main-layout.module.scss";
 
 const { defaultAlgorithm, darkAlgorithm } = theme;
 const { Sider, Content } = Layout;
 
 export const MainLayout = () => {
+  const [fetched, setFetched] = useState<boolean>(false);
   const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
+
   document.body.style.backgroundColor = isDarkMode ? "#121212" : "#e2e2e2";
+  const value = useMemo(() => ({ fetched, setFetched }), [fetched]);
 
   return (
     <>
@@ -19,22 +23,27 @@ export const MainLayout = () => {
           algorithm: isDarkMode ? darkAlgorithm : defaultAlgorithm,
         }}
       >
-        <Layout>
-          <Sider theme="light">
-            <SiderMenu />
-          </Sider>
+        <FetchMoviesContext.Provider
+          value={{ isFetched: value.fetched, setIsFetched: value.setFetched }}
+        >
           <Layout>
-            <Row align={"middle"} className={styles.headerStyle}>
-              <HeaderMenu
-                isDark={isDarkMode}
-                setIsDark={(value) => setIsDarkMode(value)}
-              />
-            </Row>
-            <Content className={styles.content}>
-              <Outlet />
-            </Content>
+            <Sider theme="light">
+              <SiderMenu />
+            </Sider>
+            <Layout>
+              <Row align={"middle"} className={styles.headerStyle}>
+                <HeaderMenu
+                  isDark={isDarkMode}
+                  setIsDark={(value) => setIsDarkMode(value)}
+                />
+              </Row>
+              <Content className={styles.content}>
+                <Outlet />
+              </Content>
+            </Layout>
+            <FetchMovies />
           </Layout>
-        </Layout>
+        </FetchMoviesContext.Provider>
       </ConfigProvider>
     </>
   );
