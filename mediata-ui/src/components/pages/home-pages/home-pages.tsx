@@ -29,7 +29,7 @@ export const HomePage = () => {
     },
   ];
   return (
-    <Row gutter={[20, 20]} style={{padding: '10px'}}>
+    <Row gutter={[10, 10]} style={{ padding: "10px" }}>
       {fakeList.map((item) => (
         <Card
           key={item.id}
