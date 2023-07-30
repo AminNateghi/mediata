@@ -14,7 +14,6 @@ export const FetchMoviesContext = createContext<FetchProps>({
 
 export const FetchMovies = () => {
   const { isFetched } = useContext(FetchMoviesContext);
-  
 
   return (
     <>

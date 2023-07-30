@@ -1,6 +1,6 @@
 import { storage } from "@neutralinojs/lib";
 import { useMutation, useQuery } from "react-query";
-import { queryClient } from "./query-client";
+import { queryClient } from "../query-client";
 
 const KEY_SETTINGS_FOLDERS = "folders";
 

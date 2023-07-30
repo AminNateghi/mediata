@@ -1,13 +1,17 @@
 import { useContext, useEffect, useState } from "react";
 import { Button, Col, Input, List, Row, Space, Spin, Typography } from "antd";
-import { DeleteOutlined, FolderOutlined, PlusCircleOutlined } from "@ant-design/icons";
+import {
+  DeleteOutlined,
+  FolderOutlined,
+  PlusCircleOutlined,
+} from "@ant-design/icons";
 import {
   useSettingsAddFolder,
   useSettingsDeleteFolder,
   useSettingsGetFolders,
-} from "@/services/settings-service";
+} from "@/services/search-folder/settings-service";
 import { FetchMoviesContext } from "@/components/layouts/components/fetch-movies";
-import { useFetchMovies } from "@/services/fetch-movies-service";
+import { useFetchMovies } from "@/services/fetch-movies/fetch-movies-service";
 
 const { Text, Title } = Typography;
 
@@ -38,6 +42,14 @@ export const SettingsPages = () => {
     }
   };
 
+  const handleFetchNow = () => {
+    if (viewSettings) {
+      viewSettings.map((item: string) => {
+        serviceFetchMovies(item);
+      });
+    }
+  };
+
   return (
     <Row>
       <Col span={12} offset={6}>
@@ -51,9 +63,19 @@ export const SettingsPages = () => {
               onChange={(value) => setFolder(value.target.value)}
               onPressEnter={() => handleAddFolder()}
             />
-            <Button type='primary' onClick={() => handleAddFolder()} icon={<PlusCircleOutlined />}>Add to list</Button>
+            <Button
+              type="primary"
+              onClick={() => handleAddFolder()}
+              icon={<PlusCircleOutlined />}
+            >
+              Add to list
+            </Button>
           </Space.Compact>
-          <List bordered header={<Text strong>Selected folders:</Text>}>
+          <Space>
+            <Button onClick={() => handleFetchNow()}>Fetch movies now</Button>
+            <Button>Clear all</Button>
+          </Space>
+          <List bordered header={<Text strong>Selected folders:</Text>} style={{minHeight: '100px'}}>
             {isFetching ? (
               <Spin />
             ) : (
