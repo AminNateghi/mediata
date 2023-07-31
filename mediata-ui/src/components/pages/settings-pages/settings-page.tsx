@@ -1,24 +1,35 @@
 import { useContext, useEffect, useState } from "react";
-import { Button, Col, Input, List, Row, Space, Spin, Typography } from "antd";
+import {
+  Button,
+  Col,
+  Empty,
+  Input,
+  List,
+  Row,
+  Space,
+  Typography,
+  notification,
+} from "antd";
 import {
   DeleteOutlined,
   FolderOutlined,
   PlusCircleOutlined,
 } from "@ant-design/icons";
+import { FetchMoviesContext } from "@/components/layouts/components/fetch-movies";
+import { useFetchMovies } from "@/services/fetch-movies/fetch-movies-service";
 import {
+  checkFolderIsDuplicate,
   useSettingsAddFolder,
   useSettingsDeleteFolder,
   useSettingsGetFolders,
 } from "@/services/search-folder/settings-service";
-import { FetchMoviesContext } from "@/components/layouts/components/fetch-movies";
-import { useFetchMovies } from "@/services/fetch-movies/fetch-movies-service";
 
 const { Text, Title } = Typography;
 
 export const SettingsPages = () => {
   const [folder, setFolder] = useState<any>();
   const { setIsFetched } = useContext(FetchMoviesContext);
-  const { data: viewSettings, isFetching } = useSettingsGetFolders();
+  const { data: folders } = useSettingsGetFolders();
   const { mutate: serviceAddFolder } = useSettingsAddFolder();
   const { mutate: serviceDeleteFolder } = useSettingsDeleteFolder();
   const { mutate: serviceFetchMovies, isLoading: isLoadingFetch } =
@@ -30,21 +41,26 @@ export const SettingsPages = () => {
 
   const handleAddFolder = () => {
     if (folder) {
-      serviceAddFolder(folder);
-      serviceFetchMovies(folder);
-      setFolder("");
+      if (checkFolderIsDuplicate(folder)) {
+        notification.info({
+          message: "This folder exists!",
+          placement: "bottomRight",
+        });
+      } else {
+        serviceAddFolder(folder);
+        serviceFetchMovies(folder);
+        setFolder("");
+      }
     }
   };
 
   const handleDeleteFolder = (folder: string) => {
-    if (folder) {
-      serviceDeleteFolder(folder);
-    }
+    if (folder) serviceDeleteFolder(folder);
   };
 
   const handleFetchNow = () => {
-    if (viewSettings) {
-      viewSettings.map((item: string) => {
+    if (folders) {
+      folders.map((item: string) => {
         serviceFetchMovies(item);
       });
     }
@@ -75,26 +91,31 @@ export const SettingsPages = () => {
             <Button onClick={() => handleFetchNow()}>Fetch movies now</Button>
             <Button>Clear all</Button>
           </Space>
-          <List bordered header={<Text strong>Selected folders:</Text>} style={{minHeight: '100px'}}>
-            {isFetching ? (
-              <Spin />
+          <List
+            bordered
+            header={<Text strong>Selected folders:</Text>}
+            style={{ minHeight: "100px" }}
+          >
+            {folders?.length == 0 ? (
+              <Empty />
             ) : (
-              viewSettings &&
-              viewSettings.map((item: string) => (
-                <List.Item
-                  key={item}
-                  actions={[
-                    <Button
-                      shape={"circle"}
-                      onClick={() => handleDeleteFolder(item)}
-                    >
-                      <DeleteOutlined />
-                    </Button>,
-                  ]}
-                >
-                  <List.Item.Meta avatar={<FolderOutlined />} title={item} />
-                </List.Item>
-              ))
+              <>
+                {folders?.map((item: string) => (
+                  <List.Item
+                    key={item}
+                    actions={[
+                      <Button
+                        shape={"circle"}
+                        onClick={() => handleDeleteFolder(item)}
+                      >
+                        <DeleteOutlined />
+                      </Button>,
+                    ]}
+                  >
+                    <List.Item.Meta avatar={<FolderOutlined />} title={item} />
+                  </List.Item>
+                ))}
+              </>
             )}
           </List>
         </Space>

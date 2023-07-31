@@ -8,6 +8,7 @@ interface schemaTheMovieDb {
 
 interface schemaApp {
   movies?: Movie[];
+  folders?: string[];
 }
 
 const defaultDataTmdb: schemaTheMovieDb = { movies: [] };
@@ -17,6 +18,6 @@ export const dbTheMovieDb = new LowSync<schemaTheMovieDb>(
   defaultDataTmdb
 );
 
-const defaultDataApp: schemaApp = { movies: [] };
+const defaultDataApp: schemaApp = { movies: [], folders: [] };
 const adapterApp = new LocalStorage<schemaApp>("db-app");
 export const dbApp = new LowSync<schemaApp>(adapterApp, defaultDataApp);
