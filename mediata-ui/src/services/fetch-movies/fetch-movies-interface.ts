@@ -1,15 +1,15 @@
 export interface FetchMoviesResponseDto {
   page: number;
-  results: tmdbDto[];
+  results: TheMovieDb[];
   total_pages: number;
   total_results: number;
 }
 
-interface tmdbDto {
+export interface TheMovieDb {
+  id: number;
   adult: boolean;
   backdrop_path?: string;
   genre_ids: number[];
-  id: number;
   original_language: string;
   original_title: string;
   overview: string;
@@ -28,5 +28,11 @@ export interface Movie {
   directory: string;
   fileName: string;
   fileSize: number;
-  tmdb?: tmdbDto;
+  tmdbId?: number;
+}
+
+
+export interface FileInfo {
+  title: string;
+  year: string;
 }
