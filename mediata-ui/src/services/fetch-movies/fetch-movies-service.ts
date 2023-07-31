@@ -1,26 +1,42 @@
 import { filesystem } from "@neutralinojs/lib";
-import { useMutation } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import { api } from "../http-client";
 import { AxiosResponse } from "axios";
 import {
   FetchMoviesResponseDto,
   FileInfo,
+  Movie,
   TheMovieDb,
 } from "./fetch-movies-interface";
 import { dbTheMovieDb, dbApp } from "./database";
 import sanitize from "sanitize-filename-truncate";
+import { queryClient } from "../query-client";
 
 const REGEX_MOVIE_EXT = /\.(avi|mkv|mp4|mov|wmv)$/i;
 const REGEX_MOVIE_TITLE = new RegExp(
   /^(.*?)\W(?:(\d{4})(?:\W(\d+p)?)|(\d+p)(?:\W(\d{4}))?)\b/m
 );
 
+export const useGetMovies = () =>
+  useQuery({
+    queryKey: ["movies"],
+    queryFn: () =>
+      new Promise<Movie[]>((resolve) => {
+        dbApp.read();
+        const movies = dbApp.data.movies as Movie[];
+        resolve(movies);
+      }),
+  });
+
 export const useFetchMovies = () =>
   useMutation((folder: string) => searchInFolder(folder), {
     onSuccess() {
-      console.log("== success fetch");
+      queryClient.invalidateQueries("movies");
     },
   });
+
+export const useFindMovieInTmdbById = () =>
+  useMutation((id: number) => findTmdbById(id));
 
 const apiSearch = (title: string): Promise<FetchMoviesResponseDto> =>
   api
@@ -120,4 +136,13 @@ const saveResultToLocalDb = (movies: FetchMoviesResponseDto) => {
     if (!foundedInLocal) dbTheMovieDb.data.movies?.push(item);
   });
   dbTheMovieDb.write();
+};
+
+const findTmdbById = (id: number): Promise<TheMovieDb | undefined> => {
+  return new Promise((resolve) => {
+    let item: TheMovieDb | undefined;
+    dbTheMovieDb.read();
+    item = dbTheMovieDb.data.movies?.find((i) => i.id == id);
+    resolve(item);
+  });
 };

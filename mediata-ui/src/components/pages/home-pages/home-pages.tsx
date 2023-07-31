@@ -1,3 +1,5 @@
+import { MovieCover } from "@/components/movie-cover/movie-cover";
+import { useGetMovies } from "@/services/fetch-movies/fetch-movies-service";
 import { Card, Row, Space } from "antd";
 const { Meta } = Card;
 
@@ -10,39 +12,18 @@ interface Movies {
 }
 
 export const HomePage = () => {
-  const fakeList: Movies[] = [
-    {
-      id: "1",
-      title: "Sound of Freedom",
-      image: "",
-      rate: 4.1,
-      isFavorite: true,
-    },
-    { id: "2", title: "Bullet Train", image: "", rate: 4.2 },
-    { id: "3", title: "Coda", image: "", rate: 4.3 },
-    { id: "4", title: "Dune", image: "", rate: 4.4, isFavorite: true },
-    {
-      id: "5",
-      title: "Everything Everywhere All At Once",
-      image: "",
-      rate: 4.5,
-    },
-  ];
+  const { data: movies } = useGetMovies();
+
   return (
-    <Row gutter={[10, 10]} style={{ padding: "10px" }}>
-      {fakeList.map((item) => (
+    <Row style={{ padding: "10px" }}>
+      {movies?.map((movie) => (
         <Card
-          key={item.id}
+          key={movie.title}
           hoverable
-          style={{ width: 180 }}
-          cover={
-            <img
-              alt="example"
-              src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"
-            />
-          }
+          style={{ width: 200,  margin: 10 }}
+          cover={<MovieCover movie={movie} />}
         >
-          <Meta title={item.title} description="www.instagram.com" />
+          <Meta title={movie.title} description={movie.year} />
         </Card>
       ))}
     </Row>
