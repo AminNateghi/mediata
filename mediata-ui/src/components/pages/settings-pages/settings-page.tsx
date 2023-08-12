@@ -5,6 +5,7 @@ import {
   Empty,
   Input,
   List,
+  Popconfirm,
   Row,
   Space,
   Typography,
@@ -19,6 +20,7 @@ import { FetchMoviesContext } from "@/components/layouts/components/fetch-movies
 import { useFetchMovies } from "@/services/fetch-movies/fetch-movies-service";
 import {
   checkFolderIsDuplicate,
+  clearAllCollection,
   useSettingsAddFolder,
   useSettingsDeleteFolder,
   useSettingsGetFolders,
@@ -66,6 +68,10 @@ export const SettingsPages = () => {
     }
   };
 
+  const handleClearAll = () => {
+    clearAllCollection();
+  };
+
   return (
     <Row>
       <Col span={12} offset={6}>
@@ -89,7 +95,15 @@ export const SettingsPages = () => {
           </Space.Compact>
           <Space>
             <Button onClick={() => handleFetchNow()}>Fetch movies now</Button>
-            <Button>Clear all</Button>
+            <Popconfirm
+              title="Clear movies"
+              description="Are you sure to clear all collection movies?"
+              onConfirm={() => handleClearAll()}
+              okText="Yes"
+              cancelText="No"
+            >
+              <Button>Clear all</Button>
+            </Popconfirm>
           </Space>
           <List
             bordered
@@ -97,7 +111,7 @@ export const SettingsPages = () => {
             style={{ minHeight: "100px" }}
           >
             {folders?.length == 0 ? (
-              <Empty />
+              <Empty style={{ marginTop: "1rem", marginBottom: "1rem" }} />
             ) : (
               <>
                 {folders?.map((item: string) => (

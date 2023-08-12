@@ -51,3 +51,10 @@ export const checkFolderIsDuplicate = (folder: string): boolean => {
   const item = dbApp.data.folders?.find((i) => i == folder);
   return Boolean(item);
 };
+
+export const clearAllCollection = () => {
+  dbApp.data.folders = [];
+  dbApp.data.movies = [];
+  dbApp.write();
+  queryClient.invalidateQueries("settings-folders");
+};
