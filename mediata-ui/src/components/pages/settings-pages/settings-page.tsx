@@ -20,7 +20,8 @@ import { FetchMoviesContext } from "@/components/layouts/components/fetch-movies
 import { useFetchMovies } from "@/services/fetch-movies/fetch-movies-service";
 import {
   checkFolderIsDuplicate,
-  clearAllCollection,
+  clearMoviesCollection,
+  clearSettingsFoldersAndCollection,
   useSettingsAddFolder,
   useSettingsDeleteFolder,
   useSettingsGetFolders,
@@ -62,6 +63,7 @@ export const SettingsPages = () => {
 
   const handleFetchNow = () => {
     if (folders) {
+      clearMoviesCollection();
       folders.map((item: string) => {
         serviceFetchMovies(item);
       });
@@ -69,7 +71,7 @@ export const SettingsPages = () => {
   };
 
   const handleClearAll = () => {
-    clearAllCollection();
+    clearSettingsFoldersAndCollection();
   };
 
   return (

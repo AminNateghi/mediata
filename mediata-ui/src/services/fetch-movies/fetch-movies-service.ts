@@ -73,7 +73,6 @@ const searchInFolder = (folder: string) =>
 const searchInFile = (file: filesystem.DirectoryEntry, folder: string) => {
   dbTheMovieDb.read();
   dbApp.read();
-  dbApp.data.movies = [];
 
   const movieInfo = extractMovieName(file.entry);
   const foundedInLocal = dbTheMovieDb.data.movies?.find(

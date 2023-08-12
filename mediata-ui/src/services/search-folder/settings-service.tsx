@@ -52,7 +52,12 @@ export const checkFolderIsDuplicate = (folder: string): boolean => {
   return Boolean(item);
 };
 
-export const clearAllCollection = () => {
+export const clearMoviesCollection = () => {
+  dbApp.data.movies = [];
+  dbApp.write();
+};
+
+export const clearSettingsFoldersAndCollection = () => {
   dbApp.data.folders = [];
   dbApp.data.movies = [];
   dbApp.write();
