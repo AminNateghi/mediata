@@ -44,31 +44,49 @@ const apiSearch = (title: string): Promise<FetchMoviesResponseDto> =>
     .then((response: AxiosResponse) => response?.data);
 
 const searchInFolder = (folder: string) =>
-  filesystem.readDirectory(folder).then((files) => {
-    files.forEach(async (file) => {
-      if (
-        file.type == "FILE" &&
-        REGEX_MOVIE_EXT.test(file.entry) &&
-        REGEX_MOVIE_TITLE.test(file.entry)
-      ) {
-        dbTheMovieDb.read();
-        dbApp.read();
-        dbApp.data.movies = [];
+  filesystem
+    .readDirectory(folder)
+    .then((items) => {
+      items
+        .filter(
+          (item) =>
+            item.type == "DIRECTORY" &&
+            item.entry !== "." &&
+            item.entry !== ".."
+        )
+        .map((file) => {
+          if (file.type == "DIRECTORY")
+            searchInFolder(folder + "\\" + file.entry);
+        });
 
-        const movieInfo = extractMovieName(file.entry);
-        const foundedInLocal = dbTheMovieDb.data.movies?.find(
-          (i) =>
-            i.original_title == movieInfo.title &&
-            new Date(i.release_date).getFullYear() == Number(movieInfo.year)
-        );
-        if (foundedInLocal) {
-          findFromLocal(foundedInLocal, movieInfo, folder, file);
-        } else {
-          findFromOnline(movieInfo, folder, file);
-        }
-      }
-    });
-  });
+      items
+        .filter(
+          (item) =>
+            item.type == "FILE" &&
+            REGEX_MOVIE_EXT.test(item.entry) &&
+            REGEX_MOVIE_TITLE.test(item.entry)
+        )
+        .map((file) => searchInFile(file, folder));
+    })
+    .catch(() => console.error("Folder not found!"));
+
+const searchInFile = (file: filesystem.DirectoryEntry, folder: string) => {
+  dbTheMovieDb.read();
+  dbApp.read();
+  dbApp.data.movies = [];
+
+  const movieInfo = extractMovieName(file.entry);
+  const foundedInLocal = dbTheMovieDb.data.movies?.find(
+    (i) =>
+      i.original_title == movieInfo.title &&
+      new Date(i.release_date).getFullYear() == Number(movieInfo.year)
+  );
+  if (foundedInLocal) {
+    findFromLocal(foundedInLocal, movieInfo, folder, file);
+  } else {
+    findFromOnline(movieInfo, folder, file);
+  }
+};
 
 const findFromOnline = async (
   fileInfo: FileInfo,
