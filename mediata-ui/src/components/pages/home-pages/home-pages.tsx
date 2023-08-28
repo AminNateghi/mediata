@@ -20,7 +20,7 @@ export const HomePage = () => {
         <Card
           key={movie.title}
           hoverable
-          style={{ width: 200,  margin: 10 }}
+          style={{ width: 200, margin: 10 }}
           cover={<MovieCover movie={movie} />}
         >
           <Meta title={movie.title} description={movie.year} />

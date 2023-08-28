@@ -5,6 +5,7 @@ import { AxiosResponse } from "axios";
 import {
   FetchMoviesResponseDto,
   FileInfo,
+  Genres,
   Movie,
   TheMovieDb,
 } from "./fetch-movies-interface";
@@ -37,6 +38,34 @@ export const useFetchMovies = () =>
 
 export const useFindMovieInTmdbById = () =>
   useMutation((id: number) => findTmdbById(id));
+
+export const useGetGenresMovies = () =>
+  useQuery({
+    queryKey: ["genre"],
+    queryFn: () => apiGenres(),
+  });
+
+const apiGenres = (): Promise<Genres> => {
+  dbTheMovieDb.read();
+
+  return new Promise<Genres>((resolve, reject) => {
+    if (dbTheMovieDb.data?.genres?.length! > 0) {
+      // exist offline data
+      resolve({ genres: dbTheMovieDb.data.genres! });
+    } else {
+      // get online genres
+      resolve(
+        api
+          .get(`/genre/movie/list?language=en`)
+          .then((response: AxiosResponse) => {
+            dbTheMovieDb.data.genres?.push(response?.data);
+            dbTheMovieDb.write();
+            return response?.data
+          })
+      );
+    }
+  });
+};
 
 const apiSearch = (title: string): Promise<FetchMoviesResponseDto> =>
   api

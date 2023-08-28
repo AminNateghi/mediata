@@ -31,8 +31,16 @@ export interface Movie {
   tmdbId?: number;
 }
 
-
 export interface FileInfo {
   title: string;
   year: string;
+}
+
+export interface Genres {
+  genres: Genre[];
+}
+
+export interface Genre {
+  id: number;
+  name: string;
 }

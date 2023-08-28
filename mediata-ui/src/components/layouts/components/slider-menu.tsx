@@ -1,6 +1,7 @@
 import { HomeOutlined, SearchOutlined } from "@ant-design/icons";
 import { Menu, MenuProps } from "antd";
 import { useNavigate } from "react-router-dom";
+import { GenresMovies } from './genres-menu';
 
 interface MenuType {
   key: string;
@@ -47,6 +48,8 @@ export const SiderMenu = () => {
         items={items}
         onClick={(value) => handleGoto(value.key)}
       />
+     
+     <GenresMovies />
     </>
   );
 };

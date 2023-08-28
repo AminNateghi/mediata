@@ -1,9 +1,10 @@
 import { LowSync } from "lowdb";
 import { LocalStorage } from "lowdb/browser";
-import { Movie, TheMovieDb } from "./fetch-movies-interface";
+import { Genre, Movie, TheMovieDb } from "./fetch-movies-interface";
 
 interface schemaTheMovieDb {
   movies?: TheMovieDb[];
+  genres?: Genre[];
 }
 
 interface schemaApp {
@@ -11,7 +12,7 @@ interface schemaApp {
   folders?: string[];
 }
 
-const defaultDataTmdb: schemaTheMovieDb = { movies: [] };
+const defaultDataTmdb: schemaTheMovieDb = { movies: [], genres: [] };
 const adapterTmdb = new LocalStorage<schemaTheMovieDb>("db-tmdb");
 export const dbTheMovieDb = new LowSync<schemaTheMovieDb>(
   adapterTmdb,
