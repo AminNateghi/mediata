@@ -1,6 +1,8 @@
 import { MovieCover } from "@/components/movie-cover/movie-cover";
 import { useGetMovies } from "@/services/fetch-movies/fetch-movies-service";
 import { Card, Row, Space } from "antd";
+import { v4 as uuidv4 } from "uuid";
+
 const { Meta } = Card;
 
 interface Movies {
@@ -18,7 +20,7 @@ export const HomePage = () => {
     <Row style={{ padding: "10px" }}>
       {movies?.map((movie) => (
         <Card
-          key={movie.title}
+          key={uuidv4()}
           hoverable
           style={{ width: 200, margin: 10 }}
           cover={<MovieCover movie={movie} />}
