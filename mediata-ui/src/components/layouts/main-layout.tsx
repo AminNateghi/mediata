@@ -27,10 +27,10 @@ export const MainLayout = () => {
           value={{ isFetched: value.fetched, setIsFetched: value.setFetched }}
         >
           <Layout>
-            <Sider theme="light">
+            <Sider theme="light" className={styles.sideMenu}>
               <SiderMenu />
             </Sider>
-            <Layout>
+            <Layout className={styles.layout}>
               <Row align={"middle"} className={styles.headerStyle}>
                 <HeaderMenu
                   isDark={isDarkMode}
