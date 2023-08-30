@@ -12,5 +12,7 @@ neutralino.js
 .storage
 *.log
 
+/images
+
 /.tmp
 /.vscode/settings.json

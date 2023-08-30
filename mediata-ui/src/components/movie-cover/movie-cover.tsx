@@ -28,7 +28,7 @@ export const MovieCover = ({ movie }: Props) => {
   return (
     <>
       {imageUrl ? (
-        <img src={imageUrl} />
+        <img loading='lazy' src={imageUrl} />
       ) : (
         <div
           style={{
@@ -39,7 +39,7 @@ export const MovieCover = ({ movie }: Props) => {
             height: 300,
           }}
         >
-          <Empty description='No Poster'/>
+          <Empty description="No Poster" />
         </div>
       )}
     </>

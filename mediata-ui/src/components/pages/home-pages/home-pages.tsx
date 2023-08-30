@@ -32,7 +32,7 @@ export const HomePage = () => {
 
   return (
     <Row style={{ padding: "10px" }}>
-      {filteredMovies.length > 0 ? (
+      {filteredMovies?.length > 0 ? (
         filteredMovies?.map((movie) => (
           <Card
             key={uuidv4()}
